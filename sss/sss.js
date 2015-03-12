@@ -52,9 +52,9 @@ $.fn.sss = function(options) {
 		}
 
 		// Animate Slider
-		function animate_slide(target) {
+		function animate_slide(target, isNavClick) {
 			if (!isAnimating) {
-				if (!isHovering) {
+				if (!isHovering || isNavClick) {
 					isAnimating = true;
 					var target_slide = slides.eq(target);
 
@@ -70,15 +70,15 @@ $.fn.sss = function(options) {
 		}
 
 		// Next Slide
-		function next_slide() {
+		function next_slide(isNavClick) {
 			target = target === slide_count - 1 ? 0 : target + 1;
-			animate_slide(target);
+			animate_slide(target, isNavClick);
 		}
 
 		// Prev Slide
-		function prev_slide() {
+		function prev_slide(isNavClick) {
 			target = target === 0 ? slide_count - 1 : target - 1;
-			animate_slide(target);
+			animate_slide(target, isNavClick);
 		}
 
 		if (settings.arrows) {
@@ -92,9 +92,9 @@ $.fn.sss = function(options) {
 			slider.css({paddingBottom: get_height(target)}).click(function(e) {
 				clicked = $(e.target);
 				if (clicked.is(next)) {
-					next_slide();
+					next_slide(true);
 				} else if (clicked.is(prev)) {
-					prev_slide();
+					prev_slide(true);
 				}
 			});
 
