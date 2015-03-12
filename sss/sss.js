@@ -1,121 +1,117 @@
 /** Super Simple Slider by @intllgnt **/
-
 ;(function($, window, document, undefined ) {
 
 $.fn.sss = function(options) {
 
-// Options
-
+	// Options
 	var settings = $.extend({
-	slideShow : true,
-	startOn : 0,
-	speed : 3500,
-	transition : 400,
-	arrows : true,
-	pauseOnHover: true
+		slideShow : true,
+		startOn : 0,
+		speed : 3500,
+		transition : 400,
+		arrows : true,
+		pauseOnHover: true
 	}, options);
 
 	return this.each(function() {
 
-// Variables
+		// Variables
+		var wrapper = $(this),
+				slides = wrapper.children().wrapAll('<div class="sss"/>').addClass('ssslide'),
+				slider = wrapper.find('.sss'),
+				slide_count = slides.length,
+				transition = settings.transition,
+				starting_slide = settings.startOn,
+				target = starting_slide > slide_count - 1 ? 0 : starting_slide,
+				isAnimating = false,
+				isHovering = false,
+				clicked,
+				timer,
+				key,
+				prev,
+				next,
 
-	var
-	wrapper = $(this),
-	slides = wrapper.children().wrapAll('<div class="sss"/>').addClass('ssslide'),
-	slider = wrapper.find('.sss'),
-	slide_count = slides.length,
-	transition = settings.transition,
-	starting_slide = settings.startOn,
-	target = starting_slide > slide_count - 1 ? 0 : starting_slide,
-	isAnimating = false,
-	isHovering = false,
-	clicked,
-	timer,
-	key,
-	prev,
-	next,
+				// Reset Slideshow
+				reset_timer = settings.slideShow ? function() {
+					clearTimeout(timer);
+					timer = setTimeout(next_slide, settings.speed);
+				} : $.noop;
 
-// Reset Slideshow
+		// Get Slide Height
+		function get_height(target) {
+			return ((slides.eq(target).height() / slider.width()) * 100) + '%';
+		}
 
-	reset_timer = settings.slideShow ? function() {
-	clearTimeout(timer);
-	timer = setTimeout(next_slide, settings.speed);
-	} : $.noop;
+		// Pause on Hover
+		function pauseOnHover() {
+			slider.on('mouseenter', function() {
+				isHovering = true;
+			}).on('mouseleave', function() {
+				isHovering = false;
+			});
+		}
 
-// Animate Slider
+		// Animate Slider
+		function animate_slide(target) {
+			if (!isAnimating) {
+				if (!isHovering) {
+					isAnimating = true;
+					var target_slide = slides.eq(target);
 
-	function get_height(target) {
-	return ((slides.eq(target).height() / slider.width()) * 100) + '%';
-	}
+					target_slide.fadeIn(transition);
+					slides.not(target_slide).fadeOut(transition);
 
-// Pause on Hover
+					slider.animate({paddingBottom: get_height(target)}, transition,  function() {
+						isAnimating = false;
+					});
+				}
+				reset_timer();
+			}
+		}
 
-	function pauseOnHover() {
-		slider.on('mouseenter', function() {
-			isHovering = true;
-		}).on('mouseleave', function() {
-			isHovering = false;
+		// Next Slide
+		function next_slide() {
+			target = target === slide_count - 1 ? 0 : target + 1;
+			animate_slide(target);
+		}
+
+		// Prev Slide
+		function prev_slide() {
+			target = target === 0 ? slide_count - 1 : target - 1;
+			animate_slide(target);
+		}
+
+		if (settings.arrows) {
+			slider.append('<div class="sssprev"/>', '<div class="sssnext"/>');
+		}
+		next = slider.find('.sssnext');
+		prev = slider.find('.sssprev');
+
+		$(window).load(function() {
+			if (settings.pauseOnHover) { pauseOnHover(); }
+			slider.css({paddingBottom: get_height(target)}).click(function(e) {
+				clicked = $(e.target);
+				if (clicked.is(next)) {
+					next_slide();
+				} else if (clicked.is(prev)) {
+					prev_slide();
+				}
+			});
+
+			animate_slide(target);
+
+			$(document).keydown(function(e) {
+				key = e.keyCode;
+				if (key === 39) {
+					next_slide();
+				} else if (key === 37) {
+					prev_slide();
+				}
+			});
 		});
-	}
 
-	function animate_slide(target) {
-	if (!isAnimating) {
-	if (!isHovering) {
-	isAnimating = true;
-	var target_slide = slides.eq(target);
+	}); // End
 
-	target_slide.fadeIn(transition);
-	slides.not(target_slide).fadeOut(transition);
+}; // End $.fn
 
-	slider.animate({paddingBottom: get_height(target)}, transition,  function() {
-	isAnimating = false;
-	});
-	}
-	reset_timer();
-
-	}}
-
-// Next Slide
-
-	function next_slide() {
-	target = target === slide_count - 1 ? 0 : target + 1;
-	animate_slide(target);
-	}
-
-// Prev Slide
-
-	function prev_slide() {
-	target = target === 0 ? slide_count - 1 : target - 1;
-	animate_slide(target);
-	}
-
-	if (settings.arrows) {
-	slider.append('<div class="sssprev"/>', '<div class="sssnext"/>');
-	}
-
-	next = slider.find('.sssnext');
-	prev = slider.find('.sssprev');
-
-	$(window).load(function() {
-	if (settings.pauseOnHover) { pauseOnHover(); }
-	slider.css({paddingBottom: get_height(target)}).click(function(e) {
-	clicked = $(e.target);
-	if (clicked.is(next)) { next_slide(); }
-	else if (clicked.is(prev)) { prev_slide(); }
-	});
-
-	animate_slide(target);
-
-	$(document).keydown(function(e) {
-	key = e.keyCode;
-	if (key === 39) { next_slide(); }
-	else if (key === 37) { prev_slide(); }
-	});
-
-	});
-// End
-
-});
-
-};
 })(jQuery, window, document);
