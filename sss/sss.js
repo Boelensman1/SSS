@@ -51,17 +51,16 @@ $.fn.sss = function(options) {
 // Pause on Hover
 
 	function pauseOnHover() {
-		if (settings.pauseOnHover) {
-			$wrapper.on('mouseenter', function() {
-				isHovering = true;
-			}).on('mouseleave', function() {
-				isHovering = false;
-			});
-		}
+		slider.on('mouseenter', function() {
+			isHovering = true;
+		}).on('mouseleave', function() {
+			isHovering = false;
+		});
 	}
 
 	function animate_slide(target) {
-	if (!isAnimating || !isHovering) {
+	if (!isAnimating) {
+	if (!isHovering) {
 	isAnimating = true;
 	var target_slide = slides.eq(target);
 
@@ -71,7 +70,7 @@ $.fn.sss = function(options) {
 	slider.animate({paddingBottom: get_height(target)}, transition,  function() {
 	isAnimating = false;
 	});
-
+	}
 	reset_timer();
 
 	}}
@@ -98,7 +97,7 @@ $.fn.sss = function(options) {
 	prev = slider.find('.sssprev');
 
 	$(window).load(function() {
-
+	if (settings.pauseOnHover) { pauseOnHover(); }
 	slider.css({paddingBottom: get_height(target)}).click(function(e) {
 	clicked = $(e.target);
 	if (clicked.is(next)) { next_slide(); }
