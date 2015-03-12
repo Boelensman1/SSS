@@ -60,7 +60,7 @@ $.fn.sss = function(options) {
 
 	reset_timer();
 
-	}};
+	}}
 
 // Next Slide
 
@@ -80,23 +80,23 @@ $.fn.sss = function(options) {
 	slider.append('<div class="sssprev"/>', '<div class="sssnext"/>');
 	}
 
-	next = slider.find('.sssnext'),
+	next = slider.find('.sssnext');
 	prev = slider.find('.sssprev');
 
 	$(window).load(function() {
 
 	slider.css({paddingBottom: get_height(target)}).click(function(e) {
 	clicked = $(e.target);
-	if (clicked.is(next)) { next_slide() }
-	else if (clicked.is(prev)) { prev_slide() }
+	if (clicked.is(next)) { next_slide(); }
+	else if (clicked.is(prev)) { prev_slide(); }
 	});
 
 	animate_slide(target);
 
 	$(document).keydown(function(e) {
 	key = e.keyCode;
-	if (key === 39) { next_slide() }
-	else if (key === 37) { prev_slide() }
+	if (key === 39) { next_slide(); }
+	else if (key === 37) { prev_slide(); }
 	});
 
 	});
