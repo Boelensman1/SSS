@@ -11,7 +11,8 @@ $.fn.sss = function(options) {
 	startOn : 0,
 	speed : 3500,
 	transition : 400,
-	arrows : true
+	arrows : true,
+	pauseOnHover: true
 	}, options);
 
 	return this.each(function() {
@@ -26,7 +27,8 @@ $.fn.sss = function(options) {
 	transition = settings.transition,
 	starting_slide = settings.startOn,
 	target = starting_slide > slide_count - 1 ? 0 : starting_slide,
-	animating = false,
+	isAnimating = false,
+	isHovering = false,
 	clicked,
 	timer,
 	key,
@@ -46,16 +48,28 @@ $.fn.sss = function(options) {
 	return ((slides.eq(target).height() / slider.width()) * 100) + '%';
 	}
 
+// Pause on Hover
+
+	function pauseOnHover() {
+		if (settings.pauseOnHover) {
+			$wrapper.on('mouseenter', function() {
+				isHovering = true;
+			}).on('mouseleave', function() {
+				isHovering = false;
+			});
+		}
+	}
+
 	function animate_slide(target) {
-	if (!animating) {
-	animating = true;
+	if (!isAnimating || !isHovering) {
+	isAnimating = true;
 	var target_slide = slides.eq(target);
 
 	target_slide.fadeIn(transition);
 	slides.not(target_slide).fadeOut(transition);
 
 	slider.animate({paddingBottom: get_height(target)}, transition,  function() {
-	animating = false;
+	isAnimating = false;
 	});
 
 	reset_timer();
