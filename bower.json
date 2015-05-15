@@ -1,0 +1,29 @@
+{
+  "name": "supersimpleslider",
+  "version": "1.0.0",
+  "homepage": "http://supersimpleslider.com",
+  "authors": [
+    "intllgnt <info@intllgnt.com>"
+  ],
+  "description": "A functional, flexible slider weighing in at less then a single kilobyte.",
+  "main": [
+    "sss/sss.js",
+    "sss/sss.css",
+    "sss/images/arr.png"
+  ],
+  "keywords": [
+    "slider",
+    "css",
+    "js",
+    "front-end"
+  ],
+  "license": "WTFPL",
+  "ignore": [
+	  "sss/sss.min.js",
+	  "readme.txt",
+	  "sss/license.txt"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9.0"
+  }
+}
